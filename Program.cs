@@ -12,13 +12,7 @@ namespace ChatRouletteClient
                 String name = AskForName();
                 using (Client client = new Client(name))
                 {
-                    Boolean isConnected = await client.ConnectToServer();
-                    if (!isConnected)
-                        throw new Exception();
-
-                    client.StartReceiveMessagesCycle();
-                    client.StartSendMessagesCycle();
-                    client.ExceptionHandleCycle();
+                    await client.Start();
                 }
             }
             catch (Exception ex)

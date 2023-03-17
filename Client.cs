@@ -29,7 +29,7 @@ namespace ChatRouletteClient
         }
         
 
-        public async Task<Boolean> ConnectToServer()
+        private async Task<Boolean> ConnectToServer()
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ChatRouletteClient
             return sb.ToString();
         }
 
-        public void StartReceiveMessagesCycle()
+        private void StartReceiveMessagesCycle()
         {
             ThreadPool.QueueUserWorkItem((s) =>
             {
@@ -89,7 +89,7 @@ namespace ChatRouletteClient
             });
         }
 
-        public void StartSendMessagesCycle()
+        private void StartSendMessagesCycle()
         {
             ThreadPool.QueueUserWorkItem((s) =>
             {
@@ -109,6 +109,16 @@ namespace ChatRouletteClient
             });
         }
 
+        public async Task Start()
+        {
+            Boolean isConnected = await ConnectToServer();
+            if (!isConnected)
+                throw new Exception();
+            StartReceiveMessagesCycle();
+            StartSendMessagesCycle();
+            ExceptionHandleCycle();
+        }
+
         private void SendMessage(String message)
         {
             try
@@ -122,7 +132,7 @@ namespace ChatRouletteClient
             }
         }
 
-        public void ExceptionHandleCycle()
+        private void ExceptionHandleCycle()
         {
             while (true)
             {
